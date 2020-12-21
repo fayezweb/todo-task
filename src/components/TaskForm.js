@@ -15,7 +15,8 @@ const TaskForm = () => {
         // setTask(task);
         // localStorage.setItem('Tasks', JSON.stringify(task));
         // history.push('/');
-        fetch('http://localhost:5000//addTodo', {
+        console.log(data);
+        fetch('https://todo-app37.herokuapp.com/addTodo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -24,6 +25,7 @@ const TaskForm = () => {
             .then(data => {
                 if (data) {
                     alert("New Task added successfully");
+                    history.push('/')
                 }
             })
     }

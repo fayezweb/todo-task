@@ -16,10 +16,6 @@ const Task = (props) => {
         setSearchTask(task);
     }, [task]);
     console.log(pageCount)
-    // useEffect(() => {
-    //     setPageCount(Math.ceil(searchTasks.length / perPage));
-    // }, [])
-
     //handle delete task
     const onDeleteTask = (index) => {
         const tasks = task;
@@ -41,32 +37,29 @@ const Task = (props) => {
         } else {
             setSearchTask(task)
         }
-
     }
+
     //pagination 
+    // const handlePageClick = (e) => {
+    //     const selectedPage = e.selected;
+    //     setOffset(selectedPage + 1)
+    // };
+    // const slice = searchTasks.slice(offset, offset + perPage);
 
-
-    const handlePageClick = (e) => {
-        const selectedPage = e.selected;
-        setOffset(selectedPage + 1)
-    };
-    const slice = searchTasks.slice(offset, offset + perPage);
-
-    useEffect(() => {
-        setPageCount(Math.ceil(searchTasks.length / perPage));
-        localStorage.setItem('pageCount', JSON.stringify(pageCount))
-    }, [pageCount]);
-    const getPageCout = () => {
-        const getPageCount = localStorage.getItem('Tasks');
-        if (typeof getPageCount !== 'undefined' && getPageCount !== null) {
-            const page = JSON.parse(getPageCount);
-            setPageCount(page);
-        }
-    }
-    useEffect(() => {
-        getPageCout();
-    }, [])
-    console.log(pageCount)
+    // useEffect(() => {
+    //     setPageCount(Math.ceil(searchTasks.length / perPage));
+    //     localStorage.setItem('storePageCount', JSON.stringify(pageCount))
+    // }, [pageCount]);
+    // const getPageCout = () => {
+    //     const getPageCount = localStorage.getItem('Tasks');
+    //     if (typeof getPageCount !== 'undefined' && getPageCount !== null) {
+    //         const page = JSON.parse(getPageCount);
+    //         setPageCount(page);
+    //     }
+    // }
+    // useEffect(() => {
+    //     getPageCout();
+    // }, [])
     return (
         <div>
             <TaskHeader />
@@ -79,8 +72,8 @@ const Task = (props) => {
 
                 {
                     searchTasks.length ?
-                        typeof searchTasks !== undefined && searchTasks !== null && slice.map((data, index) => (
-                            <TaskTaskDetails Tasks={data} onDeleteTask={() => onDeleteTask(index)} ></TaskTaskDetails>
+                        typeof task !== undefined && task !== null && task.map((data, index) => (
+                            <TaskTaskDetails Tasks={data} key={data._id}></TaskTaskDetails>
                         ))
                         :
                         <h1 className="text-success text-center">No task available right now! <br></br>
@@ -92,7 +85,7 @@ const Task = (props) => {
             </div>
             {
                 searchTasks.length > 2 && <div className="row justify-content-center">
-                    <ReactPaginate
+                    {/* <ReactPaginate
                         previousLabel={"prev"}
                         nextLabel={"next"}
                         breakLabel={"..."}
@@ -103,7 +96,7 @@ const Task = (props) => {
                         onPageChange={handlePageClick}
                         containerClassName={"pagination"}
                         subContainerClassName={"pages pagination"}
-                        activeClassName={"active"} />
+                        activeClassName={"active"} /> */}
                 </div>
             }
         </div >

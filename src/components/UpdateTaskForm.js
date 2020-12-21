@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { tasksContext } from '../App';
 import { useContext } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const UpdateTaskForm = () => {
     const { id } = useParams();
@@ -10,14 +11,30 @@ const UpdateTaskForm = () => {
 
     const [task, setTask] = useContext(tasksContext);
     const { register, handleSubmit, errors } = useForm();
-    const [selectedTask, setSelectedTask] = useState(task[id]);
+
+    //load single event
+    const [singleTodo, setSingleTodo] = useState({});
+    useEffect(() => {
+        fetch('https://todo-app37.herokuapp.com/singleTodo?id=' + id)
+            .then(res => res.json())
+            .then(data => setSingleTodo(data))
+    }, [])
+    console.log(singleTodo)
+
+    //update todo task
     const handleUpdateTask = (data) => {
-        // task[id].id = id;
-        task[id].Title = data.Title;
-        task[id].Priority = data.Priority;
-        setTask(task)
-        localStorage.setItem('Tasks', JSON.stringify(task));
-        history.push('/');
+        fetch('https://todo-app37.herokuapp.com/updateTodo?id=' + id, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data) {
+                    alert("Task updated successfully");
+                    history.push('/');
+                }
+            })
     }
 
     return (
@@ -30,13 +47,13 @@ const UpdateTaskForm = () => {
                             className="form-control"
                             name="Title"
                             placeholder="Task Title"
-                            defaultValue={selectedTask ? selectedTask.Title : "Title"}
+                            defaultValue={singleTodo && singleTodo.Title}
                             ref={register({ required: true })}
                         /> <br></br>
                         <span className="text-danger">
                             {errors.Title && "Task Title is required"}
                         </span>
-                        <select className="form-control" name="Priority" ref={register} defaultValue={selectedTask ? selectedTask.Priority : "Priority"}>
+                        <select className="form-control" name="Priority" ref={register} defaultValue={singleTodo && singleTodo.Priority}>
                             <option value="Low">Low</option>
                             <option value="Mediun">Medium</option>
                             <option value="High">High</option>

@@ -11,25 +11,18 @@ import { useState } from "react";
 import { createContext } from "react";
 import { useEffect } from "react";
 import UpdateTaskForm from "./components/UpdateTaskForm";
-import axios from 'axios'
-import ReactPaginate from 'react-paginate';
+
 //create task context
 export const tasksContext = createContext();
-
 
 function App() {
   const [task, setTask] = useState([]);
   useEffect(() => {
-    initializeLocalData();
-  }, []);
+    fetch('https://todo-app37.herokuapp.com/loadTodo')
+      .then(res => res.json())
+      .then(todoData => setTask(todoData))
+  }, [task]);
 
-  const initializeLocalData = () => {
-    const tasksJON = localStorage.getItem('Tasks');
-    if (typeof tasksJON !== 'undefined' && tasksJON !== null) {
-      const tasks = JSON.parse(tasksJON);
-      setTask(tasks);
-    }
-  }
   return (
     <tasksContext.Provider value={[task, setTask]} className="apps">
       <Router>
